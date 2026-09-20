@@ -38,9 +38,15 @@ the committed files.
   runtime, avoiding a dependency on SDK globals that are not exported by the
   current arm64 runner framework.
 - Replacement candidate run: GitHub Actions run `35514055678`, commit
-  `5e876c1`; queued at the time of this evidence update. The run is expected to
-  remain unable to start Linux and Windows until the repository owner's GitHub
-  Actions billing or spending-limit restriction is resolved.
+  `5e876c1`; failed after 11 seconds because GitHub prevented all three jobs
+  from starting. Each job reported a failed account payment or an Actions
+  spending-limit restriction. This run therefore provides no hosted build or
+  macOS-link verification evidence.
+
+The repository owner must resolve the GitHub billing or Actions spending-limit
+restriction before another replacement candidate run can produce Linux,
+Windows, or macOS artifacts. No payment or spending-limit change was made as
+part of this engineering work.
 
 Unsigned workflow artifacts remain engineering candidates. Branch protection,
 required review, signed Windows and Linux packages, macOS signing/notarization,
