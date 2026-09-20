@@ -67,7 +67,7 @@ jobs:
         run: npm run tauri --workspace=@trajectory/collector -- build --bundles ${{ matrix.bundles }}
       - name: Record SHA-256 checksums
         run: node scripts/checksum-release-artifacts.mjs > collector-checksums.sha256
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact }}
           path: |

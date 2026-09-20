@@ -107,7 +107,7 @@ jobs:
       - run: npm run build --workspace=@trajectory/collector
       - run: cargo test --manifest-path apps/collector/src-tauri/Cargo.toml -p trajectory-collector
       - run: npm run collector:package:windows
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: trajectory-collector-windows
           path: apps/collector/src-tauri/target/release/bundle/nsis/*.exe
@@ -132,7 +132,7 @@ jobs:
       - run: npm run build --workspace=@trajectory/collector
       - run: cargo test --manifest-path apps/collector/src-tauri/Cargo.toml -p trajectory-collector
       - run: npm run collector:package:linux
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: trajectory-collector-linux
           path: apps/collector/src-tauri/target/release/bundle/deb/*.deb
@@ -151,7 +151,7 @@ jobs:
       - run: npm run build --workspace=@trajectory/collector
       - run: cargo test --manifest-path apps/collector/src-tauri/Cargo.toml -p trajectory-collector
       - run: npm run collector:package:macos
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: trajectory-collector-macos-unsigned
           path: |
