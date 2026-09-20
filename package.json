@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces --if-present",
-    "check": "npm run typecheck --workspaces --if-present && npm run lint --workspaces --if-present",
+    "check": "npm run build --workspace=@trajectory/schema && npm run typecheck --workspaces --if-present && npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "acceptance:v1": "scripts/v1-acceptance.sh",
     "readiness:production": "node scripts/production-readiness.mjs",
