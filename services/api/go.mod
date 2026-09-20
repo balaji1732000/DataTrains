@@ -10,7 +10,7 @@ require (
 	github.com/aws/smithy-go v1.28.1
 	github.com/coreos/go-oidc/v3 v3.21.0
 	github.com/jackc/pgx/v5 v5.10.0
-	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
+	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	golang.org/x/oauth2 v0.36.0
 )
 
