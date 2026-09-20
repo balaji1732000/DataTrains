@@ -74,7 +74,7 @@ jobs:
           load: true
           tags: datatrains-control-plane:test
       - run: docker run --rm --entrypoint /bin/sh datatrains-control-plane:test -c 'test "$(id -u)" = 65532 && ffprobe -version >/dev/null'
-      - uses: aquasecurity/trivy-action@0.33.1
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
         with:
           image-ref: datatrains-control-plane:test
           severity: HIGH,CRITICAL

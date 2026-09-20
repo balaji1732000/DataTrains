@@ -2,7 +2,20 @@
 -- if an external migration runner registered 017 before the role migration.
 GRANT SELECT, INSERT, UPDATE, DELETE ON redaction_plans, redaction_jobs
   TO datatrains_runtime;
-REVOKE ALL PRIVILEGES ON redaction_plans, redaction_jobs FROM anon, authenticated;
+
+-- Supabase provides these Data API roles, while local and CI PostgreSQL
+-- installations may not. Revoke them when present without making the
+-- production schema impossible to test on a stock PostgreSQL server.
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+    REVOKE ALL PRIVILEGES ON redaction_plans, redaction_jobs FROM anon;
+  END IF;
+  IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
+    REVOKE ALL PRIVILEGES ON redaction_plans, redaction_jobs FROM authenticated;
+  END IF;
+END
+$$;
 
 DO $$
 BEGIN
