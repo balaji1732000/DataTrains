@@ -458,10 +458,6 @@ mod macos {
 
     #[link(name = "ApplicationServices", kind = "framework")]
     unsafe extern "C" {
-        static kAXFocusedApplicationAttribute: CFStringRef;
-        static kAXFocusedWindowAttribute: CFStringRef;
-        static kAXTitleAttribute: CFStringRef;
-
         fn AXUIElementCreateSystemWide() -> AXUIElementRef;
         fn AXUIElementCopyAttributeValue(
             element: AXUIElementRef,
@@ -757,26 +753,41 @@ mod macos {
 
     fn foreground_context() -> (CaptureContext, bool) {
         unsafe {
+            // Build the Accessibility attribute names at runtime instead of
+            // linking against the SDK's kAX* CFString globals. Those globals
+            // are declared in the headers but are not exported by the arm64
+            // framework used on GitHub's current macOS runners.
+            let focused_application_attribute = CFString::new("AXFocusedApplication");
+            let focused_window_attribute = CFString::new("AXFocusedWindow");
+            let title_attribute = CFString::new("AXTitle");
             let system = AXUIElementCreateSystemWide();
             if system.is_null() {
                 return unknown_context();
             }
-            let application = copy_attribute(system, kAXFocusedApplicationAttribute);
+            let application =
+                copy_attribute(system, focused_application_attribute.as_concrete_TypeRef());
             CFRelease(system as CFTypeRef);
             let Some(application) = application else {
                 return unknown_context();
             };
             let application_element = application as AXUIElementRef;
-            let application_name = copy_string_attribute(application_element, kAXTitleAttribute)
-                .unwrap_or_else(|| "unknown".into());
-            let window_title = copy_attribute(application_element, kAXFocusedWindowAttribute)
-                .and_then(|window| {
-                    let title = copy_string_attribute(window as AXUIElementRef, kAXTitleAttribute)
-                        .unwrap_or_default();
-                    CFRelease(window);
-                    (!title.is_empty()).then_some(title)
-                })
+            let application_name =
+                copy_string_attribute(application_element, title_attribute.as_concrete_TypeRef())
+                    .unwrap_or_else(|| "unknown".into());
+            let window_title = copy_attribute(
+                application_element,
+                focused_window_attribute.as_concrete_TypeRef(),
+            )
+            .and_then(|window| {
+                let title = copy_string_attribute(
+                    window as AXUIElementRef,
+                    title_attribute.as_concrete_TypeRef(),
+                )
                 .unwrap_or_default();
+                CFRelease(window);
+                (!title.is_empty()).then_some(title)
+            })
+            .unwrap_or_default();
             let mut process_id = 0_i32;
             let owns_focus = AXUIElementGetPid(application_element, &mut process_id)
                 == AX_ERROR_SUCCESS
