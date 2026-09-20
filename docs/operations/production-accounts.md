@@ -11,7 +11,7 @@ deployment, credential, billing, or irreversible action.
 | Auth0 | `sampathbalaji777@gmail.com` | Team `balaji's Team`; tenant `dev-pvoa8kc6eirqwbti.au.auth0.com` |
 | Supabase | Organization `balaji1732000's Org` (`tdsaspmiwwyfctdzaipb`) | Project `DataTrains Production` (`mfmeeyvtwybmhyulouif`) in `ap-southeast-1` |
 | Vercel | GitHub-authenticated account `balaji1732000` | Project `datatrains-admin` in team `balaji1732000s-projects`; production alias `https://datatrains-admin.vercel.app` |
-| GitHub | GitHub account `balaji1732000` | OAuth application `DataTrains Production` for the Auth0 GitHub social connection; hosted source repository still pending |
+| GitHub | GitHub account `balaji1732000` | Private repository `balaji1732000/DataTrains`; OAuth application `DataTrains Production` for the Auth0 GitHub social connection |
 
 The Supabase management connection reports organization membership and project
 metadata but does not expose the member email. Do not infer or substitute an

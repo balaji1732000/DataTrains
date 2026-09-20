@@ -7,8 +7,8 @@
       "id": "repository",
       "title": "Repository, protected branch, review and CI",
       "status": "external_evidence_required",
-      "local_evidence": [".github/workflows/ci.yml", "package-lock.json"],
-      "remaining": ["Create the hosted repository and first reviewed commit", "Protect the production branch and require CI/review", "Record a successful hosted CI run including container and Rust audits"]
+      "local_evidence": [".github/workflows/ci.yml", "package-lock.json", "docs/operations/evidence/github-production-2026-09-20.md"],
+      "remaining": ["Protect the production branch and require CI/review", "Record a successful hosted CI run including container and Rust audits"]
     },
     {
       "id": "environments",
