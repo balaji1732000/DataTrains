@@ -1,0 +1,59 @@
+{
+  "schema_version": "trajectory/v1",
+  "trajectory_id": "traj_fixture_001",
+  "task": {
+    "task_id": "task_001",
+    "template_id": "photoshop_remove_bg_v1",
+    "goal": "Remove the background and export a transparent PNG.",
+    "category": "design.image_editing",
+    "difficulty": "intermediate"
+  },
+  "environment": {
+    "os": "windows",
+    "os_version": "11",
+    "locale": "en-US",
+    "timezone": "Asia/Kuala_Lumpur",
+    "display": { "width": 1920, "height": 1080, "scale_factor": 1 }
+  },
+  "capture": {
+    "started_at": "2026-09-07T00:00:00Z",
+    "duration_ns": 2000000000,
+    "clock": "monotonic_ns_since_session_start",
+    "video_segments": [{
+      "segment_id": "000001",
+      "key": "raw/sessions/sess_fixture/video/000001.mp4",
+      "start_ns": 0,
+      "end_ns": 2000000000,
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "size": 1024
+    }]
+  },
+  "actions": [
+    { "timestamp_ns": 1000000, "type": "mouse_move", "x": 414, "y": 533 },
+    { "timestamp_ns": 2000000, "type": "click", "x": 414, "y": 533, "button": "left" }
+  ],
+  "outcome": {
+    "status": "success",
+    "output_artifacts": [{
+      "key": "raw/sessions/sess_fixture/outputs/final.png",
+      "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "size": 2048,
+      "media_type": "image/png"
+    }]
+  },
+  "qa": { "state": "pending", "rubric_version": "rubric-v1", "reviews": [] },
+  "privacy": {
+    "consent_document_id": "consent_001",
+    "consent_version": "v1",
+    "clipboard_captured": false,
+    "recording_visible": true,
+    "pii_review": "pending"
+  },
+  "provenance": {
+    "session_id": "sess_fixture",
+    "contributor_id": "contrib_fixture",
+    "collector_version": "0.1.0",
+    "created_at": "2026-09-07T00:01:00Z"
+  }
+}
+

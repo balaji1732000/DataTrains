@@ -1,0 +1,21 @@
+{
+  "name": "@trajectory/dataset-validator",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": { "trajectory-validator": "./dist/cli.js" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src",
+    "test": "npm run build && node --test tests/*.test.mjs",
+    "validate": "node dist/cli.js"
+  },
+  "dependencies": { "@trajectory/schema": "0.1.0" },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "6.0.3",
+    "typescript-eslint": "^8.0.0"
+  }
+}

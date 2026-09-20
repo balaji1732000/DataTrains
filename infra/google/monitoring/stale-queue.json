@@ -1,0 +1,30 @@
+{
+  "displayName": "DataTrains queue is stale",
+  "combiner": "OR",
+  "enabled": true,
+  "severity": "WARNING",
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "The oldest ready DataTrains job exceeded five minutes. Check Cloud Scheduler, worker executions, Supabase availability, and R2 availability."
+  },
+  "conditions": [
+    {
+      "displayName": "Queue age exceeded five minutes",
+      "conditionThreshold": {
+        "filter": "resource.type=\"cloud_run_job\" AND metric.type=\"logging.googleapis.com/user/datatrains_stale_queue_snapshot\"",
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0,
+        "duration": "0s",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_SUM",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "trigger": { "count": 1 }
+      }
+    }
+  ],
+  "alertStrategy": { "autoClose": "1800s" }
+}

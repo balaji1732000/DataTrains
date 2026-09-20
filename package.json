@@ -1,0 +1,45 @@
+{
+  "name": "trajectory-platform",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "check": "npm run typecheck --workspaces --if-present && npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "acceptance:v1": "scripts/v1-acceptance.sh",
+    "readiness:production": "node scripts/production-readiness.mjs",
+    "admin:dev": "npm run dev --workspace=@trajectory/admin",
+    "collector:dev": "npm run dev --workspace=@trajectory/collector",
+    "collector:desktop:dev": "npm run tauri --workspace=@trajectory/collector -- dev",
+    "collector:package:linux": "scripts/package-collector-linux.sh deb",
+    "collector:package:linux:appimage": "scripts/package-collector-linux.sh appimage",
+    "collector:package:macos": "npm run tauri --workspace=@trajectory/collector -- build --bundles app,dmg",
+    "collector:core:test": "scripts/run-cargo.sh test --manifest-path apps/collector/src-tauri/Cargo.toml -p collector-core",
+    "collector:core:check": "scripts/run-cargo.sh fmt --manifest-path apps/collector/src-tauri/Cargo.toml --all -- --check && scripts/run-cargo.sh clippy --manifest-path apps/collector/src-tauri/Cargo.toml -p collector-core --all-targets -- -D warnings",
+    "collector:tauri:check": "scripts/run-cargo.sh check --manifest-path apps/collector/src-tauri/Cargo.toml -p trajectory-collector --target x86_64-pc-windows-gnu",
+    "collector:tauri:build": "scripts/run-cargo.sh build --release --manifest-path apps/collector/src-tauri/Cargo.toml -p trajectory-collector --bin trajectory-collector --target x86_64-pc-windows-gnu",
+    "collector:tauri:test-compile": "scripts/run-cargo.sh test --manifest-path apps/collector/src-tauri/Cargo.toml -p trajectory-collector --target x86_64-pc-windows-gnu --no-run",
+    "collector:package:windows": "npm run tauri --workspace=@trajectory/collector -- build --bundles nsis",
+    "validate:trajectory": "npm run validate --workspace=@trajectory/dataset-validator --",
+    "validate:release": "npm run validate --workspace=@trajectory/dataset-validator -- --release",
+    "go:build": "scripts/run-go.sh build ./...",
+    "go:test": "scripts/run-go.sh test ./...",
+    "go:test:integration": "TEST_DATABASE_URL=postgres://trajectory@127.0.0.1:55432/trajectory?sslmode=disable scripts/run-go.sh test -p 1 ./...",
+    "go:migrate": "scripts/run-go.sh run ./cmd/migrate",
+    "database:inventory": "scripts/database-inventory.sh",
+    "database:verify-restore": "scripts/verify-database-restore.sh",
+    "worker:run": "scripts/run-go.sh run ./cmd/worker",
+    "postgres:start": "scripts/local-postgres.sh start",
+    "postgres:stop": "scripts/local-postgres.sh stop",
+    "infra:up": "docker compose -f infra/docker/compose.yaml up -d",
+    "infra:down": "docker compose -f infra/docker/compose.yaml down"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "product": "DataTrains Production V1",
+  "rule": "A gate is complete only when every required external and local proof is attached and independently reviewable.",
+  "gates": [
+    {
+      "id": "repository",
+      "title": "Repository, protected branch, review and CI",
+      "status": "external_evidence_required",
+      "local_evidence": [".github/workflows/ci.yml", "package-lock.json"],
+      "remaining": ["Create the hosted repository and first reviewed commit", "Protect the production branch and require CI/review", "Record a successful hosted CI run including container and Rust audits"]
+    },
+    {
+      "id": "environments",
+      "title": "Separated environments and managed secrets",
+      "status": "external_evidence_required",
+      "local_evidence": ["infra/google/runtime.production.example.yaml", "docs/deployment/cloud-run.md", "docs/operations/production-accounts.md", "docs/operations/evidence/production-foundation-2026-09-20.md"],
+      "remaining": ["Provision distinct staging resources", "Attach the complete staging managed-secret inventory without exposing secret values", "Verify clients and developer machines contain no production credentials"]
+    },
+    {
+      "id": "identity",
+      "title": "OpenID identity and authorization",
+      "status": "external_evidence_required",
+      "local_evidence": ["docs/deployment/identity.md", "services/api/internal/authn/authn.go", "apps/admin/src/lib/oidc.ts", "apps/collector/src-tauri/src/auth.rs", "docs/operations/evidence/production-foundation-2026-09-20.md"],
+      "remaining": ["Verify GitHub invitation acceptance, MFA recovery, logout and revocation in staging"]
+    },
+    {
+      "id": "database",
+      "title": "Supabase PostgreSQL",
+      "status": "external_evidence_required",
+      "local_evidence": ["docs/deployment/supabase.md", "docs/operations/evidence/supabase-production-2026-09-20.md", "scripts/verify-database-restore.sh", "services/api/migrations/016_governed_retention_expiry.sql"],
+      "remaining": ["Provision the separate staging Supabase project", "Configure backups and alerts", "Complete and record a staging restore rehearsal"]
+    },
+    {
+      "id": "object_storage",
+      "title": "Cloudflare R2 storage",
+      "status": "external_evidence_required",
+      "local_evidence": ["docs/deployment/r2.md", "docs/deployment/video-redaction.md", "infra/cloudflare/r2-cors.example.json", "services/api/internal/blobstore/r2.go", "services/api/migrations/021_redaction_plan_immutability.sql", "docs/operations/evidence/production-foundation-2026-09-20.md"],
+      "remaining": ["Provision a private staging bucket", "Run multipart, immutability, CORS, redaction, retention, deletion and audit exercises", "Approve the optional redacted-video policy before enabling that release profile"]
+    },
+    {
+      "id": "cloud_run",
+      "title": "Cloud Run API and worker",
+      "status": "external_evidence_required",
+      "local_evidence": ["Dockerfile", "infra/google/cloudbuild.yaml", "infra/google/deploy-control-plane.sh", "infra/google/configure-observability.sh", "docs/operations/evidence/cloud-build-2026-09-14.md", "docs/operations/evidence/production-foundation-2026-09-20.md"],
+      "remaining": ["Deploy staging with independent managed-secret versions", "Verify autoscaling, alerts and rollback against live services"]
+    },
+    {
+      "id": "vercel",
+      "title": "Vercel web deployment",
+      "status": "external_evidence_required",
+      "local_evidence": ["apps/admin/next.config.ts", "apps/admin/src/app/api/control-plane/[...path]/route.ts", "docs/operations/evidence/production-foundation-2026-09-20.md"],
+      "remaining": ["Create an independent staging project and configure the final custom production domain", "Run browser security and cross-role authorization tests"]
+    },
+    {
+      "id": "windows_collector",
+      "title": "Windows collector release",
+      "status": "physical_evidence_required",
+      "local_evidence": ["docs/deployment/collector-release.md", "docs/operations/evidence/linux-packages-2026-09-14.md", "apps/collector/src-tauri/src/lib.rs", "apps/collector/src-tauri/src/native_input.rs"],
+      "remaining": ["Choose a signing identity and supported Windows versions", "Build and sign on a trusted Windows runner", "Record clean-machine permission, capture, recovery, upgrade, rollback and uninstall tests"]
+    },
+    {
+      "id": "macos_collector",
+      "title": "macOS collector release",
+      "status": "physical_evidence_required",
+      "local_evidence": ["docs/deployment/collector-release.md", "apps/collector/src-tauri/src/lib.rs", "apps/collector/src-tauri/src/native_input.rs", "apps/collector/src-tauri/Info.plist"],
+      "remaining": ["Approve supported macOS versions and architecture strategy", "Sign and notarize with an Apple Developer identity", "Record physical permission, capture, recovery, upgrade, rollback and uninstall tests"]
+    },
+    {
+      "id": "linux_collector",
+      "title": "Linux collector release",
+      "status": "physical_evidence_required",
+      "local_evidence": ["docs/deployment/collector-release.md", "docs/operations/evidence/linux-packages-production-2026-09-20.md", "apps/collector/src-tauri/src/lib.rs", "apps/collector/src-tauri/src/native_input.rs", ".github/workflows/collector-production-candidate.yml"],
+      "remaining": ["Approve supported Ubuntu versions and package/update channel", "Sign the package", "Record Xorg acceptance and Wayland capability/fail-closed tests on clean machines"]
+    },
+    {
+      "id": "workflow",
+      "title": "End-to-end collection and release workflow",
+      "status": "external_evidence_required",
+      "local_evidence": ["scripts/v1-acceptance.sh", "services/api/internal/httpapi/api_integration_test.go", "services/api/internal/httpapi/reliability_integration_test.go"],
+      "remaining": ["Repeat the workflow against staging OpenID, Supabase, R2, Cloud Run and Vercel", "Attach reviewer/rework/release and independent-validator evidence"]
+    },
+    {
+      "id": "governance",
+      "title": "Security, privacy, consent and operations",
+      "status": "approval_required",
+      "local_evidence": ["docs/security/threat-model.md", "docs/privacy/privacy-notice.md", "docs/operations/incident-response.md", "docs/operations/contributor-support.md"],
+      "remaining": ["Assign security, privacy, legal, incident and support owners", "Approve jurisdiction-specific notice, terms and retention periods", "Run and record an incident exercise"]
+    },
+    {
+      "id": "staging_soak",
+      "title": "100-trajectory staging soak",
+      "status": "external_evidence_required",
+      "local_evidence": ["services/api/internal/httpapi/reliability_integration_test.go"],
+      "remaining": ["Collect at least 100 complete real staging trajectories", "Verify no unexplained loss, state divergence, tenant leakage or invalid release", "Record reliability, upload recovery, review and privacy metrics"]
+    },
+    {
+      "id": "external_pilot",
+      "title": "Controlled professional-contributor pilot",
+      "status": "not_started",
+      "local_evidence": ["docs/PRODUCTION_V1.md"],
+      "remaining": ["Complete every preceding production gate", "Recruit consented pilot contributors across Windows, macOS and Linux", "Run the go/no-go review using measured outcomes"]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "displayName": "DataTrains dead-letter queue is non-empty",
+  "combiner": "OR",
+  "enabled": true,
+  "severity": "ERROR",
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "A processing, video-redaction, erasure, or retention operation exhausted automatic retries. Inspect the administrator recovery queue before retrying."
+  },
+  "conditions": [
+    {
+      "displayName": "Dead-letter queue observed",
+      "conditionThreshold": {
+        "filter": "resource.type=\"cloud_run_job\" AND metric.type=\"logging.googleapis.com/user/datatrains_dead_letter_snapshot\"",
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0,
+        "duration": "0s",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_SUM",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "trigger": { "count": 1 }
+      }
+    }
+  ],
+  "alertStrategy": { "autoClose": "1800s" }
+}

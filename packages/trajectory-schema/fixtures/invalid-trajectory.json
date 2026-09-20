@@ -1,0 +1,12 @@
+{
+  "schema_version": "trajectory/v1",
+  "trajectory_id": "traj_fixture_invalid",
+  "task": {
+    "task_id": "task_001",
+    "template_id": "photoshop_remove_bg_v1",
+    "category": "design.image_editing",
+    "difficulty": "intermediate"
+  },
+  "actions": [{ "timestamp_ns": 1, "type": "tap_mouse" }]
+}
+

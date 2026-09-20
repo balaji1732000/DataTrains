@@ -1,0 +1,30 @@
+{
+  "displayName": "DataTrains API 5xx responses",
+  "combiner": "OR",
+  "enabled": true,
+  "severity": "ERROR",
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "The DataTrains API returned a 5xx response. Follow docs/operations/incident-response.md and correlate the request through trace_id/request_id."
+  },
+  "conditions": [
+    {
+      "displayName": "Any API 5xx response in five minutes",
+      "conditionThreshold": {
+        "filter": "resource.type=\"cloud_run_revision\" AND resource.label.service_name=\"datatrains-api\" AND metric.type=\"run.googleapis.com/request_count\" AND metric.label.response_code_class=\"5xx\"",
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0,
+        "duration": "0s",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_SUM",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "trigger": { "count": 1 }
+      }
+    }
+  ],
+  "alertStrategy": { "autoClose": "1800s" }
+}

@@ -1,0 +1,71 @@
+:root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, sans-serif; background: #0b0d0c; color: #f4f7f5; }
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: radial-gradient(circle at 10% 0%, #244129 0, transparent 35%), #0b0d0c; }
+button { min-height: 44px; border: 0; border-radius: 0.75rem; padding: 0 1.1rem; background: #d7ff68; color: #0e1308; font: inherit; font-weight: 800; cursor: pointer; }
+button:disabled { opacity: 0.38; cursor: not-allowed; }
+button.secondary { border: 1px solid #344038; background: transparent; color: #f4f7f5; }
+main { width: min(760px, calc(100% - 2rem)); margin: 0 auto; padding: 2.5rem 0; }
+.appHeader { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.eyebrow { margin: 0; color: #d7ff68; font-size: 0.72rem; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; }
+h1 { margin: 0.25rem 0 0; font-size: 2rem; }
+h2 { margin: 0.4rem 0 0.8rem; font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: -0.04em; }
+.safeBadge { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border: 1px solid #314039; border-radius: 999px; color: #aab6af; font-size: 0.8rem; }
+.safeBadge i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #8ca098; }
+.safeBadge.recording { border-color: #ff6b6b; color: #ffd4d4; background: #371818; }
+.safeBadge.recording i { background: #ff5d5d; box-shadow: 0 0 0 5px rgba(255,93,93,.12); animation: pulse 1.5s infinite; }
+.progressTrack { height: 4px; margin: 2rem 0 1rem; overflow: hidden; border-radius: 999px; background: #222a25; }
+.progressTrack span { display: block; height: 100%; background: #d7ff68; transition: width 200ms ease; }
+.recoveryBanner { display: grid; gap: 0.3rem; margin: 0 0 1rem; padding: 1rem; border: 1px solid #695b2a; border-radius: 0.8rem; background: #29230f; color: #f0df9c; }
+.recoveryBanner small { color: #b9ae82; }
+.card { padding: clamp(1.4rem, 4vw, 2.5rem); border: 1px solid #29322d; border-radius: 1.2rem; background: rgba(18, 22, 20, 0.94); box-shadow: 0 24px 80px rgba(0,0,0,.25); }
+.lede { color: #b0bbb4; line-height: 1.65; }
+.taskGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin: 1.5rem 0; overflow: hidden; border: 1px solid #2a342e; border-radius: 0.8rem; background: #2a342e; }
+.taskGrid div { padding: 1rem; background: #111613; }
+dt { color: #89968e; font-size: 0.75rem; }
+dd { margin: 0.35rem 0 0; font-weight: 700; }
+.warning { margin: 1.5rem 0; padding: 1rem; border-left: 3px solid #ffc857; background: #2a2414; color: #ddd4b8; line-height: 1.5; }
+.taskDetails { margin: 1rem 0; padding: 1rem; border: 1px solid #2a342e; border-radius: 0.8rem; background: #0f1411; }
+.taskDetails p, .taskDetails ul { margin-bottom: 0; }
+ul { padding-left: 1.2rem; color: #b7c2ba; line-height: 1.7; }
+.consentRow { display: flex; align-items: flex-start; gap: 0.8rem; margin: 1.5rem 0; padding: 1rem; border: 1px solid #344038; border-radius: 0.8rem; }
+.consentRow input { width: 1.2rem; height: 1.2rem; accent-color: #d7ff68; }
+.actions { display: flex; justify-content: space-between; gap: 0.8rem; margin-top: 1.5rem; }
+.checkList { margin-top: 1.5rem; }
+.checkList > div { display: flex; align-items: center; gap: 0.9rem; padding: 0.85rem 0; border-bottom: 1px solid #28312c; }
+.check { display: grid; width: 1.5rem; height: 1.5rem; place-items: center; border: 1px solid #415047; border-radius: 50%; color: #7f9086; }
+.check.passed { border-color: #d7ff68; background: #d7ff68; color: #11170b; }
+.checkList small { display: block; margin-top: 0.2rem; color: #89968e; }
+.errorMessage { margin: 1rem 0 0; color: #ff9a9a; }
+.readyCard { text-align: center; padding-block: 4rem; }
+.readyCard .lede { max-width: 560px; margin: 1rem auto 1.8rem; }
+.fieldLabel { display: grid; gap: 0.45rem; color: #dce4df; font-weight: 700; }
+.fieldLabel input { width: 100%; min-height: 44px; border: 1px solid #3c4941; border-radius: 0.7rem; padding: 0 0.8rem; background: #0d120f; color: #f4f7f5; font: inherit; }
+.fieldLabel small, .safetyNote { color: #89968e; font-weight: 400; }
+.formStack { display: grid; gap: 1rem; margin: 1.5rem 0; }
+.assignmentList { display: grid; gap: 0.7rem; margin-top: 1.5rem; }
+.assignmentRow { display: flex; width: 100%; min-height: 70px; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem; border: 1px solid #344038; background: #101512; color: #f4f7f5; text-align: left; }
+.assignmentRow span { display: grid; gap: 0.3rem; }
+.assignmentRow small { color: #89968e; }
+.assignmentRow b { color: #d7ff68; font-size: 0.72rem; }
+.assignmentHistory { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #28322c; }
+.assignmentActions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.historyRow { cursor: default; }
+.historyRow small + small { color: #cbd5cf; }
+.consentText { padding: 1rem; border: 1px solid #344038; border-radius: 0.8rem; color: #bdc8c1; line-height: 1.6; }
+.captureCard { margin-top: 2rem; border-width: 2px; }
+.captureCard.active { border-color: #7e3030; box-shadow: 0 0 0 1px rgba(255,93,93,.15), 0 24px 80px rgba(0,0,0,.25); }
+.captureCard.paused { border-color: #695b2a; }
+.captureCard h2 { margin-block: 0.4rem; font-variant-numeric: tabular-nums; }
+.pauseNotice { margin: 1rem 0; padding: 0.85rem 1rem; border-left: 3px solid #ffc857; background: #29230f; color: #f0df9c; }
+.captureActions { display: flex; gap: 0.8rem; margin-block: 1.5rem; }
+button.danger { background: #ff6b6b; color: #190606; }
+.selectedOutputs { display: grid; gap: 0.35rem; margin: 1rem 0; padding: 1rem; border: 1px solid #2a342e; border-radius: 0.8rem; background: #0f1411; }
+.selectedOutputs span { color: #9ba8a0; }
+.finishButton { width: 100%; margin: 0.5rem 0 1rem; }
+.completedCard { margin-top: 2rem; }
+.manifestList { display: grid; gap: 1px; overflow: hidden; border: 1px solid #2a342e; border-radius: 0.8rem; background: #2a342e; }
+.manifestList > div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.9rem 1rem; background: #0f1411; }
+.manifestList span { color: #89968e; font-size: 0.85rem; }
+.submissionNotice { margin: 1rem 0; padding: 1rem; border: 1px solid #486327; border-radius: 0.8rem; background: #17220f; color: #d7ff68; }
+@keyframes pulse { 50% { opacity: .5; } }
+@media (max-width: 560px) { .appHeader { align-items: flex-start; flex-direction: column; } .taskGrid { grid-template-columns: 1fr; } }

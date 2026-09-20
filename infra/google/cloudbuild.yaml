@@ -1,0 +1,38 @@
+substitutions:
+  _IMAGE: datatrains-control-plane
+  _LOCATION: asia-southeast1
+  _REPOSITORY: datatrains
+
+steps:
+  - id: go-unit-tests
+    name: golang:1.27.1-bookworm
+    dir: services/api
+    args: [go, test, ./...]
+
+  - name: gcr.io/cloud-builders/docker
+    id: build-control-plane
+    waitFor: [go-unit-tests]
+    args:
+      - build
+      - --tag
+      - ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${BUILD_ID}
+      - .
+
+  - name: gcr.io/cloud-builders/docker
+    id: verify-runtime-media-tool
+    waitFor: [build-control-plane]
+    args:
+      - run
+      - --rm
+      - --entrypoint
+      - /usr/bin/ffprobe
+      - ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${BUILD_ID}
+      - -version
+
+images:
+  - ${_LOCATION}-docker.pkg.dev/${PROJECT_ID}/${_REPOSITORY}/${_IMAGE}:${BUILD_ID}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+timeout: 1200s

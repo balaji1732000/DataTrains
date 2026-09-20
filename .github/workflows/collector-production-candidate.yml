@@ -1,0 +1,80 @@
+name: Collector production candidate
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "collector-v*"
+
+permissions:
+  contents: read
+
+env:
+  DATATRAINS_AUTH_MODE: oidc
+  DATATRAINS_API_URL: https://datatrains-api-963738422674.asia-southeast1.run.app
+  DATATRAINS_OIDC_ISSUER: https://dev-pvoa8kc6eirqwbti.au.auth0.com/
+  DATATRAINS_OIDC_CLIENT_ID: 6VDaRvBYWAXCg4q3HhTzx0re5uF2jd38
+  DATATRAINS_OIDC_AUDIENCE: https://api.datatrains.app
+  DATATRAINS_OIDC_CONNECTION: github
+  DATATRAINS_OIDC_REVOCATION_URL: https://dev-pvoa8kc6eirqwbti.au.auth0.com/oauth/revoke
+
+jobs:
+  package:
+    name: ${{ matrix.platform }} candidate
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux
+            os: ubuntu-latest
+            bundles: deb,appimage
+            artifact: datatrains-collector-linux-unsigned
+            paths: |
+              apps/collector/src-tauri/target/release/bundle/deb/*.deb
+              apps/collector/src-tauri/target/release/bundle/appimage/*.AppImage
+          - platform: windows
+            os: windows-latest
+            bundles: nsis
+            artifact: datatrains-collector-windows-unsigned
+            paths: apps/collector/src-tauri/target/release/bundle/nsis/*.exe
+          - platform: macos
+            os: macos-latest
+            bundles: app,dmg
+            artifact: datatrains-collector-macos-unsigned
+            paths: |
+              apps/collector/src-tauri/target/release/bundle/macos/*.app
+              apps/collector/src-tauri/target/release/bundle/dmg/*.dmg
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux build dependencies
+        if: matrix.platform == 'linux'
+        run: >-
+          sudo apt-get update && sudo apt-get install -y
+          libwebkit2gtk-4.1-dev build-essential file libxdo-dev libssl-dev
+          libayatana-appindicator3-dev librsvg2-dev libdbus-1-dev pkg-config
+          ffmpeg xinput x11-utils x11-xserver-utils
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - run: cargo test --manifest-path apps/collector/src-tauri/Cargo.toml -p trajectory-collector
+      - name: Build production candidate
+        run: npm run tauri --workspace=@trajectory/collector -- build --bundles ${{ matrix.bundles }}
+      - name: Record SHA-256 checksums
+        run: node scripts/checksum-release-artifacts.mjs > collector-checksums.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: |
+            ${{ matrix.paths }}
+            collector-checksums.sha256
+          if-no-files-found: error
+
+# These are unsigned engineering candidates. Promotion remains blocked until
+# the platform signing, notarization, clean-install, and physical capture gates
+# in docs/deployment/collector-release.md are complete.

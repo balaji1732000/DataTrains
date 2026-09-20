@@ -1,0 +1,13 @@
+.git/
+.tools/
+.vercel/
+**/.next/
+**/node_modules/
+**/target/
+coverage/
+data/
+infra/google/runtime.production.yaml
+*.log
+*.tsbuildinfo
+.env
+.env.*

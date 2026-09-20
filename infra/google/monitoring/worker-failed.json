@@ -1,0 +1,30 @@
+{
+  "displayName": "DataTrains worker execution failed",
+  "combiner": "OR",
+  "enabled": true,
+  "severity": "ERROR",
+  "documentation": {
+    "mimeType": "text/markdown",
+    "content": "A scheduled DataTrains worker execution failed. Inspect the Cloud Run Job execution and use docs/operations/incident-response.md."
+  },
+  "conditions": [
+    {
+      "displayName": "Any failed worker execution",
+      "conditionThreshold": {
+        "filter": "resource.type=\"cloud_run_job\" AND resource.label.job_name=\"datatrains-worker\" AND metric.type=\"run.googleapis.com/job/completed_execution_count\" AND metric.label.result=\"failed\"",
+        "comparison": "COMPARISON_GT",
+        "thresholdValue": 0,
+        "duration": "0s",
+        "aggregations": [
+          {
+            "alignmentPeriod": "300s",
+            "perSeriesAligner": "ALIGN_SUM",
+            "crossSeriesReducer": "REDUCE_SUM"
+          }
+        ],
+        "trigger": { "count": 1 }
+      }
+    }
+  ],
+  "alertStrategy": { "autoClose": "1800s" }
+}

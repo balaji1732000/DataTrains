@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://trajectory.local/schemas/trajectory-v1.json",
+  "title": "Canonical computer-use trajectory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "trajectory_id", "task", "environment", "capture", "actions", "outcome", "qa", "privacy", "provenance"],
+  "properties": {
+    "schema_version": { "const": "trajectory/v1" },
+    "trajectory_id": { "type": "string", "pattern": "^traj_[A-Za-z0-9_-]+$" },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "template_id", "goal", "category", "difficulty"],
+      "properties": {
+        "task_id": { "type": "string", "minLength": 1 },
+        "template_id": { "type": "string", "minLength": 1 },
+        "goal": { "type": "string", "minLength": 1 },
+        "category": { "type": "string", "minLength": 1 },
+        "difficulty": { "enum": ["beginner", "intermediate", "advanced"] }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["os", "os_version", "locale", "timezone", "display"],
+      "properties": {
+        "os": { "enum": ["windows", "linux", "macos"] },
+        "os_version": { "type": "string", "minLength": 1 },
+        "locale": {
+          "type": "string",
+          "anyOf": [
+            { "const": "C" },
+            { "minLength": 2 }
+          ]
+        },
+        "timezone": { "type": "string", "minLength": 1 },
+        "display": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height", "scale_factor"],
+          "properties": {
+            "width": { "type": "integer", "minimum": 320 },
+            "height": { "type": "integer", "minimum": 240 },
+            "scale_factor": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        }
+      }
+    },
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["started_at", "duration_ns", "clock", "video_segments"],
+      "properties": {
+        "started_at": { "type": "string", "format": "date-time" },
+        "duration_ns": { "type": "integer", "minimum": 1 },
+        "clock": { "const": "monotonic_ns_since_session_start" },
+        "video_segments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["segment_id", "key", "start_ns", "end_ns", "sha256", "size"],
+            "properties": {
+              "segment_id": { "type": "string", "minLength": 1 },
+              "key": { "type": "string", "pattern": "^raw/sessions/" },
+              "start_ns": { "type": "integer", "minimum": 0 },
+              "end_ns": { "type": "integer", "minimum": 1 },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              "size": { "type": "integer", "minimum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/action" }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "output_artifacts"],
+      "properties": {
+        "status": { "enum": ["success", "failure", "partial"] },
+        "output_artifacts": { "type": "array", "items": { "$ref": "#/$defs/artifact" } }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "rubric_version", "reviews"],
+      "properties": {
+        "state": { "enum": ["pending", "accepted", "rejected", "rework_required"] },
+        "rubric_version": { "type": "string", "minLength": 1 },
+        "reviews": { "type": "array" }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consent_document_id", "consent_version", "clipboard_captured", "recording_visible", "pii_review"],
+      "properties": {
+        "consent_document_id": { "type": "string", "minLength": 1 },
+        "consent_version": { "type": "string", "minLength": 1 },
+        "clipboard_captured": { "const": false },
+        "recording_visible": { "const": true },
+        "pii_review": { "enum": ["pending", "passed", "failed"] }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session_id", "contributor_id", "collector_version", "created_at"],
+      "properties": {
+        "session_id": { "type": "string", "minLength": 1 },
+        "contributor_id": { "type": "string", "minLength": 1 },
+        "collector_version": { "type": "string", "minLength": 1 },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "$defs": {
+    "action": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["timestamp_ns", "type"],
+      "properties": {
+        "timestamp_ns": { "type": "integer", "minimum": 0 },
+        "type": { "enum": ["mouse_move", "mouse_down", "mouse_up", "click", "scroll", "key_down", "key_up", "text_entry", "app_focus"] }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key", "sha256", "size", "media_type"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "size": { "type": "integer", "minimum": 1 },
+        "media_type": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
