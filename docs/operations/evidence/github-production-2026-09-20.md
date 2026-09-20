@@ -8,7 +8,7 @@ included.
 
 - Owner: `balaji1732000`
 - Repository: `balaji1732000/DataTrains`
-- Visibility: private
+- Visibility: public (changed by the repository owner after candidate run 3)
 - Default branch: `main`
 - Initial production commit: `1c4cdfe8cdd8bc6a15c1358df1033cd20570c82a`
 - Clean-workspace build-order fix: `8ef9ace5d81b9f4d60ea6bf837725c8f3542b28a`
@@ -43,10 +43,15 @@ the committed files.
   spending-limit restriction. This run therefore provides no hosted build or
   macOS-link verification evidence.
 
-The repository owner must resolve the GitHub billing or Actions spending-limit
-restriction before another replacement candidate run can produce Linux,
+At that point, the GitHub billing or Actions spending-limit restriction had to
+be resolved before another replacement candidate run could produce Linux,
 Windows, or macOS artifacts. No payment or spending-limit change was made as
 part of this engineering work.
+
+The repository owner subsequently made the repository public, allowing standard
+GitHub-hosted runners to execute without consuming private-repository minutes.
+Public-repository candidate run `35516985906`, commit `ad4a19d`, was queued for
+Linux, Windows, and macOS verification at the time of this evidence update.
 
 Unsigned workflow artifacts remain engineering candidates. Branch protection,
 required review, signed Windows and Linux packages, macOS signing/notarization,
