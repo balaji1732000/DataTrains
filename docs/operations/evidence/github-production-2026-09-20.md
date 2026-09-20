@@ -13,6 +13,7 @@ included.
 - Initial production commit: `1c4cdfe8cdd8bc6a15c1358df1033cd20570c82a`
 - Clean-workspace build-order fix: `8ef9ace5d81b9f4d60ea6bf837725c8f3542b28a`
 - Clean-CI portability fix: `4e3ffcb`
+- macOS arm64 Accessibility-link fix: `5e876c1`
 
 The initial source upload excluded environment files, generated build outputs,
 local PostgreSQL state, recorded sessions, dependency trees, Vercel state, and
@@ -29,8 +30,17 @@ the committed files.
   every platform because the local trajectory-schema package was not built
   before clean-workspace type checking.
 - Corrected candidate run: GitHub Actions run `35511945802`, commit `8ef9ace`;
-  queued for GitHub-hosted Linux, Windows, and macOS runners at the time this
-  evidence record was created.
+  completed unsuccessfully. Its macOS arm64 job passed JavaScript checks and
+  Rust tests, then failed while linking three Accessibility `kAX*` CFString
+  globals. Linux and Windows did not start because GitHub reported a failed
+  account payment or an Actions spending-limit restriction.
+- The macOS source fix creates the three Accessibility attribute CFStrings at
+  runtime, avoiding a dependency on SDK globals that are not exported by the
+  current arm64 runner framework.
+- Replacement candidate run: GitHub Actions run `35514055678`, commit
+  `5e876c1`; queued at the time of this evidence update. The run is expected to
+  remain unable to start Linux and Windows until the repository owner's GitHub
+  Actions billing or spending-limit restriction is resolved.
 
 Unsigned workflow artifacts remain engineering candidates. Branch protection,
 required review, signed Windows and Linux packages, macOS signing/notarization,
